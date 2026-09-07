@@ -48,6 +48,9 @@ if hasattr(sys.stdout, "reconfigure"):
 BASE = Path(__file__).resolve().parents[2]
 ENTRADA = BASE / "reports" / "ranking_prospectivo_2025.json"
 SAIDA = BASE / "reports" / "painel_intra_uf.html"
+# Segunda saida: pagina publicada via GitHub Pages (docs/index.html).
+# Ver docs/spec/deploy-pages.md e, na base, docs/DECISAO_DEPLOY_PORTFOLIO.md.
+SAIDA_SITE = BASE / "docs" / "index.html"
 
 
 def main():
@@ -63,10 +66,13 @@ def main():
 
     html = TEMPLATE.replace("__PAYLOAD__", payload)
     SAIDA.write_text(html, encoding="utf-8")
+    SAIDA_SITE.parent.mkdir(exist_ok=True)
+    SAIDA_SITE.write_text(html, encoding="utf-8")
 
     r = dados["resumo"]
     kb = len(html.encode("utf-8")) / 1024
     print(f"Painel gerado: {SAIDA}")
+    print(f"  copia publicada: {SAIDA_SITE}")
     print(f"  {r['ufs']} UFs | {r['municipios']} municipios | {kb:.0f} KB")
     print(f"  contrato 2025: ranking do modelo em {r['ufs_ranking_modelo']}, "
           f"regra simples em {r['ufs_regra_simples']}, "

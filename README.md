@@ -808,6 +808,13 @@ abstenção diagnóstica nas 8 inconclusivas, e mostra fonte oficial, SHA-256 da
 planilha e data de corte do treino. A decisão completa está em
 `reports/decisao_produto_pos_backtest_2025.md`.
 
+**No ar:** <https://luizmaibashi.github.io/tech-challenge-fase3-alfabetizacao/>.
+A mesma página é publicada via GitHub Pages a partir de `docs/index.html`, cópia
+byte a byte de `reports/painel_intra_uf.html` gerada pelo mesmo script. É HTML
+estático puro, sem servidor nem runtime: o link abre instantâneo. Contexto da
+escolha em `docs/spec/deploy-pages.md` e, na base de conhecimento,
+`docs/DECISAO_DEPLOY_PORTFOLIO.md`.
+
 Três decisões de produto que valem registro:
 
 - **Não existe visão nacional, de propósito.** Se a interface permitisse
@@ -871,7 +878,10 @@ jeito, e aqui está a prova, mas deste outro jeito, sim."*
 tech-challenge-fase3-alfabetizacao/
 ├── data/                    Snapshots processados (território local, etc.)
 ├── docs/
-│   └── adr/                 Decisões arquiteturais registradas (0001–0011)
+│   ├── adr/                 Decisões arquiteturais registradas (0001–0012)
+│   ├── spec/                Specs (deploy-pages.md)
+│   ├── index.html           Painel publicado via GitHub Pages (gerado)
+│   └── .nojekyll            Impede o Jekyll de processar os .md de docs/
 ├── images/                  Gráficos SHAP e diagnósticos
 ├── notebooks/
 │   └── 01_analise_completa.ipynb   Narrativa analítica, gerada e executada por script
@@ -956,11 +966,13 @@ python src/evaluation/04_robustez_algoritmo.py               # veredito independ
 python src/modeling/03_experimento_municipio_meta.py    # 5 etapas, a 4ª é a que decide
 python src/modeling/04_ranking_intra_uf.py              # modelo produtizado (retrato histórico)
 python src/evaluation/05_backtest_prospectivo_2025.py   # backtest 2024→2025 + ranking_prospectivo_2025.json
-python src/visualization/01_gerar_painel_intra_uf.py    # gera reports/painel_intra_uf.html (contrato 2025)
+python src/visualization/01_gerar_painel_intra_uf.py    # gera reports/painel_intra_uf.html + docs/index.html
 ```
 
 O painel depende de `reports/ranking_prospectivo_2025.json`, rode o backtest
-antes do gerador.
+antes do gerador. O gerador escreve duas cópias idênticas:
+`reports/painel_intra_uf.html` (contrato do ADR-0010) e `docs/index.html`
+(publicado no GitHub Pages, ADR-0012).
 
 **Enriquecimento externo: testado e não promovido** (§8, ADR-0009 e ADR-0011):
 
