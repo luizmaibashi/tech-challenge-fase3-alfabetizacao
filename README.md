@@ -95,13 +95,11 @@ município/UF/rede/ano, inclusive o único que usa Machine Learning
 clusterizar). Detalhe completo, com citação de linha de código, em
 [`ADR-0003`](docs/adr/0003-gold-vs-silver-fonte-de-dados.md).
 
-Não é uma lacuna de extração desta fase: é uma característica de como a
-Gold foi desenhada na Fase 2, para consumo de BI município-nível. Usar a
-Gold para o problema aluno-nível exigiria inventar linhas que não existem
-nela; e as poucas colunas município que poderiam ser juntadas por aluno
-(`taxa_alfabetizacao`, `gap_meta`, `deficit_absoluto_proxy`) são todas
-funções agregadas do próprio desempenho dos alunos sendo preditos:
-vazamento circular por construção do mart, não escolha de modelagem.
+Não é lacuna de extração: é como a Gold foi desenhada, para BI
+município-nível. Usá-la para o problema aluno-nível exigiria inventar
+linhas que não existem, e as poucas colunas juntáveis por aluno são funções
+do próprio desempenho sendo predito — vazamento circular por construção do
+mart. Raciocínio completo com citação de linha em `ADR-0003` (link acima).
 
 ### 3.2 O que usamos de fato
 
@@ -185,12 +183,10 @@ Pipeline scikit-learn completa, com pré-processamento integrado ao modelo
 
 ### Tratamento de data leakage
 
-Cinco colunas foram identificadas como vazamento do mesmo evento (aluno
-faltou à prova) por caminhos diferentes: três por **valor**
-(`proficiencia`, `presenca`, `preenchimento_caderno`), duas por **ausência
-de valor** (`peso_aluno`, cuja nulidade coincidia 100% com faltosos;
-`caderno=12`, que tinha 79,7% de ausentes disfarçados de categoria de
-risco). Todas as cinco estão fora do modelo. Detalhe no diário de bordo interno (não publicado), Caps. 9 e 11.
+Cinco colunas vazavam o mesmo evento (aluno faltou à prova) por caminhos
+diferentes — três por valor, duas por ausência de valor — e estão fora do
+modelo. Números, mecanismo e o guard automatizado que impede a volta delas:
+§8.
 
 ### Validação e generalização
 
@@ -231,13 +227,12 @@ complexa a aprender: o sinal disponível é essencialmente um número por
 município, aplicado a todos os seus alunos. É a mesma conclusão da §7.2, vista
 pelo lado do algoritmo.
 
-> **Correção de 2026-08-29.** Esta tabela reportava `0,533 / 0,537 / 0,554` de
-> ROC-AUC e a frase *"XGBoost lidera nas três métricas de decisão"*. Os números
-> eram de uma execução anterior à integração de território, e a liderança
-> declarada contradizia o próprio artefato: `metrics_tournament.json` grava
-> `maior_recall_no_teste: "random_forest"`. A leitura antiga também chamava a
-> Logística de "quase cega (0,533)" e concluía que as features não tinham
-> relação linear com o alvo; com 0,676 medido, a conclusão se inverte.
+*(Números revisados em duas rodadas de auditoria — execução pré-território
+com liderança de algoritmo diferente, e depois um bug de determinismo por
+paralelização do XGBoost que fazia o AUC variar com a contagem de threads.
+Nenhuma correção mudou o veredito. Histórico completo em
+[`ADR-0006 §7`](docs/adr/0006-ceiling-analysis-como-gate-pre-treino.md) e
+[`ADR-0007 §2.2`](docs/adr/0007-determinismo-de-execucao-como-requisito-de-entrega.md).)*
 
 **A escolha de algoritmo não decide o veredito.** Testados os três no split
 temporal contra o baseline municipal, nenhum o supera (ver §7.3).
@@ -247,25 +242,10 @@ negativo (aluno em risco não identificado) é o erro caro para busca
 ativa; Precision entra como contrapeso para não degenerar em marcar todo
 mundo como risco.
 
-**Nota de 2026-08-22 (recomeço pedagógico):** Os scripts de avaliação
-(`01_shap_interpretabilidade.py`, `02_teste_falsificacao.py`,
-`03_teste_residuo.py`) agora usam XGBoost com hiperparâmetros forte
-(800 árvores, depth 8, lambda 1.0), a mesma metodologia canônica (split
-temporal 2023/2024, baseline municipal, IC bootstrap) validada pela
-investigação registrada em [`ADR-0006`](docs/adr/0006-ceiling-analysis-como-gate-pre-treino.md).
-O veredito da ADR-0001 §5 mantém-se: modelo aluno-nível não supera o baseline,
-agora confirmado com modelo mais robusto (**AUC 0,6047 vs 0,6331**, IC95%
-[-0,0342, -0,0228]).
-
-> **Correção de 2026-08-25.** Esta linha reportava `AUC 0,6026, IC95%
-> [-0,0364, -0,0248]`. Aquele número **não era reprodutível**: com
-> `tree_method="hist"` + `n_jobs=-1`, o AUC variava entre **0,6025 e 0,6061**
-> apenas com a contagem de threads disponível na máquina (mesma seed, mesmo
-> dado, mesmo código), a redução paralela do histograma altera a ordem de
-> soma em ponto flutuante. `n_jobs=1` foi fixado nos scripts de avaliação e o
-> valor passou a ser estável em 0,6047. **O veredito não muda em nenhum ponto
-> da faixa**: o modelo perde do baseline 0,6331 com folga em todos eles.
-> Detalhe em [`ADR-0006 §7.1`](docs/adr/0006-ceiling-analysis-como-gate-pre-treino.md).
+Os scripts de avaliação (§7 e §8) usam XGBoost com hiperparâmetros forte
+(800 árvores, depth 8, `n_jobs=1`, fixado por reprodutibilidade), mesma
+metodologia canônica (split temporal, baseline municipal, IC bootstrap):
+**AUC 0,6047 vs 0,6331** do baseline, IC95% [-0,0342, -0,0228].
 
 ### 5.2 Modelo municipal intra-UF
 
@@ -384,15 +364,9 @@ modelo inteiro logo abaixo.
 features que o ano de treino não tem (§7.4). Em compensação `sigla_uf` salta
 de 20,4% para **46,5%**, absorvendo o que o histórico deixou de explicar.
 
-> **Correção de 2026-08-29.** Esta seção reportava `60,9% / 13,3% / 11,6% /
-> 14,2%`, de um modelo superado (400 árvores, depth 3, antes de território, os
-> blocos nem incluíam meta do PDE, `sigla_uf` e população). O diário de bordo interno (não publicado), Cap. 10.3, carrega um terceiro par
-> (`45,1% / 9,9%`), de outra execução intermediária.
->
-> Na mesma revisão descobriu-se que esta seção e a §7.2 descreviam **modelos
-> diferentes**: o SHAP rodava em split aleatório e o veredito em split
-> temporal. Daí a coluna dupla acima. A conclusão (município domina) é
-> robusta a todas as leituras.
+*(Números revisados após descobrir que esta seção e o veredito de §7.2
+rodavam em desenhos de split diferentes — daí a coluna dupla acima. A
+conclusão, município domina, é robusta às duas leituras.)*
 
 ### 7.2 O teste de falsificação: o resultado que decide o projeto
 
@@ -416,18 +390,11 @@ negativo. Não é empate: é derrota com significância. O modelo perde também 
 regenerado em 2026-08-25 com `n_jobs=1` (ver ADR-0007). A ordem da tabela é
 proposital: o modelo fica **entre** o baseline fraco e o forte.*
 
-**Isso não foi a primeira medição.** Uma versão anterior do teste, usando a
-taxa bruta municipal como baseline, tinha *passado* (0,6013 vs 0,5816,
-IC95% [+0,0129, +0,0263]: valores medidos à época, antes da correção de
-determinismo do ADR-0007). Investigar de onde vinha essa vitória mostrou que
-ela dependia quase inteiramente de uma única feature (a meta do PDE) que
-correlaciona 0,979 com a taxa de alfabetização do próprio ano. Ou seja: a
-meta *é* um número município tão forte que comparar o modelo contra um
-baseline mais fraco não provava nada. Corrigimos o teste para usar **o
-melhor baseline disponível**, não o primeiro que passasse, e o veredito
-inverteu. Ver o diário de bordo interno (não publicado), Cap. 14, para
-a sequência completa, incluindo o bug de leitura do intervalo de confiança
-que também foi corrigido nesse processo.
+**Isso não foi a primeira medição.** Uma versão anterior do teste comparava
+contra um baseline mais fraco e tinha *passado* — mas esse baseline
+correlaciona 0,979 com a meta do PDE, então a vitória não provava nada.
+Corrigido para usar **o melhor baseline disponível**, não o primeiro que
+passasse, e o veredito inverteu.
 
 ### 7.3 O veredito depende do algoritmo escolhido? (não)
 
@@ -559,15 +526,11 @@ Resumindo em uma frase: **o projeto foi pedido para prever indivíduos a partir
 de uma base que nunca observou indivíduos.**
 
 **Uma meta de política pública é um preditor melhor que o modelo.** A meta
-do PDE, aplicada uniformemente a todos os alunos do município, sozinha,
-sem nenhuma feature de aluno, supera o modelo completo de 12 features.
-
-Não é limitação do algoritmo, e isso agora está **medido**, não afirmado: os
-três candidatos rodados no mesmo split temporal contra o mesmo baseline
-convergem para o mesmo teto: Random Forest 0,6322 e Regressão Logística
-0,6325 contra 0,6331 do baseline, com intervalos que os declaram equivalentes
-a ele (§7.3). É limitação do que os dados disponíveis conseguem diferenciar
-dentro de um mesmo município.
+do PDE, sozinha, sem nenhuma feature de aluno, supera o modelo completo de
+12 features — e não por limitação do algoritmo: os três candidatos
+convergem para o mesmo teto do baseline (medido, não afirmado — §7.3). É
+limitação do que os dados disponíveis conseguem diferenciar dentro de um
+mesmo município.
 
 ### A reformulação do alvo, e o achado de maior valor do projeto
 
@@ -603,12 +566,11 @@ nível de 2023 (−0,431), não é artefato mecânico da fórmula da meta, é o 
 do ano. Uma variação de ±20pp em um ano não é aprendizado real: é mudança de
 régua na aplicação da prova.
 
-**O que funciona, e a correção de régua do ADR-0005.** Até 2026-08-20 este
-README comparava o modelo contra *"priorize quem estava pior em 2023"*
-(AUC 0,4032) e reportava vitória de +0,245 em 18 de 23 UFs. **Essa comparação
-era inválida:** AUC é antissimétrica, então 0,4032 significa que a mesma regra
-**invertida** vale 0,5968, de graça. Era o mesmo erro do Cap. 4.6, corrigido
-no modelo aluno-nível e não aplicado aqui.
+**A régua importa** ([`ADR-0005`](docs/adr/0005-correcao-da-regua-do-baseline-intra-uf.md)):
+uma versão anterior comparava contra uma regra trivial mal formulada e
+reportava vitória de +0,245 — inválida, porque AUC é antissimétrica e a
+mesma regra invertida já vale 0,5968 de graça. Corrigido para o baseline
+honesto abaixo.
 
 Contra o baseline honesto: a regra trivial com a **direção prevista a partir
 das outras UFs** (leave-one-UF-out, sem olhar o resultado do próprio estado):
@@ -641,89 +603,63 @@ O enunciado autoriza enriquecer a base com Censo Escolar (pág. 3-4). Foi feito,
 medido e **não promovido a produção** ([ADR-0011](docs/adr/0011-enriquecimento-infraestrutura-censo-escolar.md)).
 O caminho até a decisão vale mais que a decisão.
 
-**O que foi construído.** Censo Escolar 2023 (217.625 escolas) agregado por
-município, filtrado à população que o indicador de fato mede: escola em
-atividade, rede pública, com matrícula no 2º ano, e ponderado por
-`QT_MAT_FUND_AI_2`, não por média simples entre escolas. Sobram 73.660
-escolas e 2.357.055 matrículas, cobrindo **5.231/5.232 municípios (100,0%)**
-do dataset canônico.
-
-**Por que 2023 e não 2024.** O Censo 2024 existe, mas o servidor do Inep o
-publica com `Last-Modified` de julho/2026, depois do desfecho que o alvo
-mede. Usá-lo daria ao modelo informação indisponível no momento da decisão:
-o mesmo skew treino-serviço do [ADR-0008](docs/adr/0008-skew-treino-servico-nas-features-de-historico.md).
-A escolha do ano aqui é tratamento de leakage, não disponibilidade.
+**O que foi construído.** Censo Escolar 2023 agregado por município,
+ponderado por matrícula, cobrindo **100,0%** dos municípios do dataset. Ano
+2023 (não 2024) por tratamento de leakage — mesmo skew treino-serviço do
+[ADR-0008](docs/adr/0008-skew-treino-servico-nas-features-de-historico.md).
+Filtros e método completos em
+[`ADR-0011`](docs/adr/0011-enriquecimento-infraestrutura-censo-escolar.md).
 
 **O resultado: não ajuda.** AUC ponderado 0,6478 → 0,6456 (−0,0022). O IC
 bootstrap pareado não identifica **nenhuma** UF em que a infraestrutura ajude,
-e identifica **duas** em que atrapalha (PR, RJ). A previsão registrada antes
-de rodar era de resultado positivo: errou, e o registro do erro está no
-[dicionário](reports/dicionario_censo_escolar.md).
+e **duas** em que atrapalha (PR, RJ) — a previsão registrada antes de rodar
+era de resultado positivo, e errou ([dicionário](reports/dicionario_censo_escolar.md)).
 
-**O achado que salva o esforço.** "Não prevê o furo da meta" não é "não tem
-relação com alfabetização", são alvos diferentes, e confundir os dois seria
-concluir algo que o teste nunca perguntou. Medindo contra o **nível** de
-alfabetização (`taxa23`), a associação existe e é forte. Mas quase toda ela
-desaparece dentro do estado:
+**O achado que salva o esforço.** "Não prevê o furo da meta" ≠ "não tem
+relação com alfabetização" — alvos diferentes. Contra o **nível** de
+alfabetização a associação é forte, mas quase todo o sinal é **entre
+estados**, não dentro deles:
 
-| Índice | r nacional | r intra-UF | fração do sinal que era entre estados |
+| Índice | r nacional | r intra-UF | fração do sinal entre estados |
 |---|---:|---:|---:|
 | `infra_pedagogico` | +0,258 | +0,074 | **71%** |
 | `infra_conectividade` | +0,204 | +0,087 | 58% |
 | `infra_saneamento` | +0,101 | −0,000 | **100%** |
 
-*(n = 5.231; p com correção de Holm para as 6 comparações;
-[`06_infra_nivel_vs_meta.py`](src/evaluation/06_infra_nivel_vs_meta.py))*
+*(n = 5.231; Holm para 6 comparações; [`06_infra_nivel_vs_meta.py`](src/evaluation/06_infra_nivel_vs_meta.py).)*
 
-Isto é **efeito ecológico**: estados com melhor infraestrutura escolar têm,
-simultaneamente, maior alfabetização, sem que uma coisa explique a outra
-entre municípios do mesmo estado. É exatamente o mecanismo que já tinha
-derrubado o modelo municipal nacional deste projeto (§5.2: "o sinal era a
-régua estadual"), agora **reproduzido de forma independente** com uma fonte de
-dado que o projeto nunca tinha usado.
-
-A leitura de política pública que decorre daí é contraintuitiva e é o ponto:
-um ranking nacional de municípios por infraestrutura escolar pareceria
-explicar alfabetização (r = +0,26) e estaria, em 71% do efeito, apenas
-reordenando estados.
+**Efeito ecológico**: estados com melhor infraestrutura têm, simultaneamente,
+maior alfabetização, sem que uma coisa explique a outra dentro do mesmo
+estado — o mesmo mecanismo que já derrubava o modelo municipal (§5.2),
+reproduzido de forma independente com uma fonte nova.
 
 ### O placebo que invalidou a própria métrica de sucesso do projeto
 
-Dois enriquecimentos **sem correlação entre si** (IDHM socioeconômico de 2010
-e infraestrutura escolar de 2023, r ≈ 0,02–0,08) moveram as **mesmas** UFs na
-**mesma** direção: BA de `inconclusivo` para `modelo_perde`, PE de
-`inconclusivo` para `modelo_vence`. Se a mudança viesse da informação de cada
-fonte, isso não deveria acontecer.
-
-A hipótese alternativa (de que a mudança vem do simples ato de **adicionar
-dimensão**) foi testada por permutação dentro da UF: os índices são
-embaralhados entre municípios do mesmo estado, o que preserva a distribuição
-marginal e a correlação entre eles e destrói só o vínculo com o alvo
-([`09_placebo_permutacao.py`](src/modeling/09_placebo_permutacao.py), 20
-replicações).
+Dois enriquecimentos **sem correlação entre si** (IDHM 2010 e infraestrutura
+2023, r ≈ 0,02–0,08) moveram as **mesmas** UFs na **mesma** direção — se a
+mudança viesse da informação de cada fonte, isso não deveria acontecer.
+Testado por permutação dentro da UF, que preserva a distribuição e destrói só
+o vínculo com o alvo ([`09_placebo_permutacao.py`](src/modeling/09_placebo_permutacao.py),
+20 replicações; método completo em [`ADR-0011` §9](docs/adr/0011-enriquecimento-infraestrutura-censo-escolar.md)):
 
 | Métrica | Sob ruído (features sem informação) | Com dado real | p |
 |---|---|---|---:|
 | Mudanças de veredito | mediana 3 (faixa 1–6) | 4 | 0,400 |
 | AUC ponderado | 0,6445 [0,6359; 0,6511] | 0,6456 | 0,350 |
 
-**As quatro mudanças observadas com dado real são reproduzidas por ruído puro,
-sempre na mesma direção**: BA em 10 de 20 permutações (50%), PE em 7 de 20
-(35%), GO e TO em 3 de 20. Nenhuma UF sobrevive à correção de
+**As quatro mudanças observadas com dado real são reproduzidas por ruído
+puro** (BA em 50% das permutações, PE em 35%): uma UF cujo IC já está
+encostado no zero atravessa a fronteira com **qualquer** coluna a mais, pro
+lado que já estava mais perto. Nenhuma sobrevive à correção de
 Benjamini-Hochberg.
 
-O mecanismo é simples e vale para qualquer enriquecimento: uma UF cujo
-intervalo de confiança já está encostado no zero atravessa a fronteira com
-**qualquer** coluna a mais, e sempre para o lado de que já estava mais perto.
-
-A consequência é desconfortável e está registrada: **a métrica "contagem de
-UFs que mudam de veredito", usada como critério de sucesso desde o
+**Consequência registrada**: a métrica "contagem de UFs que mudam de
+veredito", critério de sucesso desde o
 [ADR-0009](docs/adr/0009-enriquecimento-municipal-fundeb-idhm.md), mede
-instabilidade de fronteira, não ganho de informação.** O "PE fechou" celebrado
-no experimento com IDHM é o mesmo flip que o acaso entrega em 35% das
-permutações. A decisão de não promover aquele enriquecimento continua certa,
-o raciocínio que a sustentava, não. A nota retroativa está no próprio ADR-0009
-§9, em vez de silenciosamente corrigida.
+instabilidade de fronteira, não ganho de informação — o "PE fechou" do
+IDHM é o mesmo flip que o acaso entrega em 35% das permutações. A decisão
+de não promover continua certa; o raciocínio que a sustentava, não (nota
+retroativa no próprio ADR-0009 §9).
 
 ## 9. Limitações do projeto
 
@@ -820,18 +756,12 @@ Três decisões de produto que valem registro:
 - **Não existe visão nacional, de propósito.** Se a interface permitisse
   ordenar municípios de estados diferentes, ela convidaria exatamente o erro
   descrito em §9. A restrição vive na ferramenta, não no rodapé.
-- **Cada estado declara se o modelo ajuda ali, no ciclo futuro.** O
-  backtest 2025 registra `modelo_vence` em 14 UFs, `modelo_perde` no CE e
-  `inconclusivo` em 8. O painel já aplica isso: recomenda a regra simples no
-  CE, exibe só diagnóstico nas 8 inconclusivas (cabeçalho da tabela muda para
-  "score do modelo (diagnóstico)" e o texto não sugere ordem de ação) e libera
-  o ranking do modelo só nas 14. Um número médio não pode esconder essas
-  diferenças.
-- **Cada estado declara qual direção vale ali.** Onde o painel usa a regra
-  simples (CE) ou se abstém, ele diz se a regra que funciona naquele estado é
-  "priorize quem estava melhor" ou "quem estava pior": a direção usada é a que
-  já funcionava na própria UF em 2024, nunca escolhida olhando o resultado de
-  2025.
+- **Cada estado declara se o modelo ajuda ali, e em que direção.** O painel
+  aplica o veredito do backtest 2025 por UF (`modelo_vence`/`modelo_perde`/
+  `inconclusivo`, ver §8): ranking do modelo nas 14 vencedoras, regra simples
+  no CE (com a direção — "melhor" ou "pior primeiro" — já validada em 2024,
+  nunca escolhida olhando 2025), só diagnóstico nas 8 inconclusivas. Um
+  número médio não esconde essas diferenças.
 - **O score vem do backtest, fora do ciclo de treino.** O número que o gestor
   vê é o que o modelo (congelado em 2023→2024) atribuiu ao município para o
   ciclo de 2025 antes de o resultado sair.
@@ -860,15 +790,11 @@ jeito, e aqui está a prova, mas deste outro jeito, sim."*
   resíduo de 6,7% de influência fica sem explicação causal.
 - **Re-executar a cada resultado anual** para verificar se o ganho de 2025
   persiste, antes de alterar a regra de qualquer UF.
-- **Reportar toda contagem de veredito contra a distribuição nula**: já
-  medida (§8): permutação entrega 1–6 mudanças por acaso. Qualquer
-  enriquecimento futuro precisa vir com esse `p`, nunca com a contagem
-  sozinha. O placebo custa 20 execuções e é reaproveitável como está.
-- **Rodar o placebo com mais replicações**: 20 dão resolução mínima de
-  p ≈ 0,048, insuficiente para o teste por UF depois da correção de múltiplas
-  comparações. A conclusão global não depende disso (o observado cai no meio
-  da distribuição nula), mas o teste UF a UF fica subdimensionado por
-  construção.
+- **Rodar o placebo (§8) com mais replicações e reportá-lo por padrão**: 20
+  dão resolução mínima (p ≈ 0,048), insuficiente para o teste por UF após
+  correção de múltiplas comparações — a conclusão global não muda, mas o
+  teste UF a UF fica subdimensionado. Qualquer enriquecimento futuro precisa
+  vir com esse `p`, nunca só a contagem de vereditos que mudam.
 
 ---
 

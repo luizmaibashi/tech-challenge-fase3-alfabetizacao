@@ -1,0 +1,301 @@
+<title>Tech Challenge Fase 3</title>
+<meta name="description" content="Apresentação executiva de 7 telas sincronizada ao roteiro de vídeo do modelo de alfabetização, para a reunião com gestores públicos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFF2F1; --surface:#FFFFFF; --surface-2:#F7F9F8;
+  --ink:#16211F; --ink-2:#3A4744; --muted:#67746F; --line:#D3DAD7; --line-2:#E4E9E7;
+  --primary:#0F5C58; --primary-soft:#DCEAE7;
+  --r1:#E9D9A8; --r2:#DFBB72; --r3:#CE8F49; --r4:#B4553C;
+  --ok:#2E6B4F; --ok-soft:#DEEBE2; --warn:#8A5A1E; --warn-soft:#F3E7D2;
+  --shadow:0 1px 2px rgba(22,33,31,.05),0 10px 28px -14px rgba(22,33,31,.22);
+  --ui:"Archivo",-apple-system,"Segoe UI",sans-serif;
+  --prose:"Source Serif 4",Georgia,serif;
+  --mono:"IBM Plex Mono","Consolas",monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101614; --surface:#18211F; --surface-2:#1E2825;
+  --ink:#E7EBE9; --ink-2:#C3CCC8; --muted:#8B9793; --line:#2C3835; --line-2:#232C2A;
+  --primary:#5CC2B5; --primary-soft:#16302D;
+  --r1:#5E5433; --r2:#7E6435; --r3:#A2703C; --r4:#C96A4E;
+  --ok:#6DBE95; --ok-soft:#15291F; --warn:#D2A75E; --warn-soft:#2B2314;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --bg:#101614; --surface:#18211F; --surface-2:#1E2825;
+  --ink:#E7EBE9; --ink-2:#C3CCC8; --muted:#8B9793; --line:#2C3835; --line-2:#232C2A;
+  --primary:#5CC2B5; --primary-soft:#16302D;
+  --r1:#5E5433; --r2:#7E6435; --r3:#A2703C; --r4:#C96A4E;
+  --ok:#6DBE95; --ok-soft:#15291F; --warn:#D2A75E; --warn-soft:#2B2314;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden;max-width:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+::selection{background:var(--primary-soft);color:var(--ink)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:3px}
+
+.deck{position:relative;min-height:100vh;padding-bottom:5.5rem}
+.slide{display:none;min-height:calc(100vh - 5.5rem);padding:clamp(1.5rem,5vw,4rem) clamp(1.25rem,6vw,6rem);align-items:center}
+.slide.active{display:flex}
+.slide-inner{max-width:920px;width:100%;margin:0 auto}
+
+.kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin:0 0 .9rem;display:flex;align-items:center;gap:.5rem}
+.kicker::before{content:"";width:18px;height:2px;background:var(--primary);display:inline-block}
+h1{font-family:var(--ui);font-weight:700;font-size:clamp(2.1rem,5.2vw,3.6rem);letter-spacing:-.02em;line-height:1.05;margin:0 0 .8rem;text-wrap:balance}
+h2{font-family:var(--ui);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.2rem);letter-spacing:-.015em;line-height:1.15;margin:0 0 1.4rem;text-wrap:balance;max-width:26ch}
+.dek{font-family:var(--prose);font-style:italic;font-size:clamp(1.05rem,2vw,1.3rem);color:var(--ink-2);max-width:56ch;margin:0 0 1.6rem;line-height:1.5}
+.meta{font-family:var(--mono);font-size:.8rem;color:var(--muted);letter-spacing:.02em}
+.quote{font-family:var(--prose);font-style:italic;font-size:clamp(1.15rem,2.4vw,1.55rem);line-height:1.55;color:var(--ink);max-width:58ch;border-left:3px solid var(--primary);padding-left:1.3rem;margin:0}
+.quote strong{font-style:normal;color:var(--primary)}
+p.body{font-family:var(--prose);font-size:1.05rem;line-height:1.6;color:var(--ink-2);max-width:60ch}
+
+/* Slide 1: cover */
+.cover-mark{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.05em;margin-top:2.4rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+
+/* Slide 2: split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:.5rem}
+@media (max-width:760px){.split{grid-template-columns:1fr}}
+.split-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.6rem 1.6rem 1.8rem;box-shadow:var(--shadow)}
+.split-card.is-target{border-color:var(--primary);border-width:2px}
+.tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem;display:block}
+.split-card.is-target .tag{color:var(--primary)}
+.split-card h3{font-family:var(--ui);font-size:1.15rem;font-weight:600;margin:0 0 .6rem}
+.split-card p{font-family:var(--prose);font-size:.98rem;color:var(--ink-2);line-height:1.55;margin:0}
+.arrow-between{display:flex;align-items:center;justify-content:center;font-family:var(--mono);color:var(--muted);font-size:1.3rem;margin:.6rem 0}
+@media (min-width:761px){.arrow-between{display:none}}
+
+/* bar chart */
+.bars{display:flex;flex-direction:column;gap:.85rem;margin:1.6rem 0 1.2rem}
+.bar-row{display:grid;grid-template-columns:13rem 1fr 5.5rem;align-items:center;gap:.9rem}
+@media (max-width:700px){.bar-row{grid-template-columns:7rem 1fr 4.2rem}}
+.bar-label{font-family:var(--mono);font-size:.82rem;color:var(--ink-2)}
+.bar-track{background:var(--surface-2);border:1px solid var(--line);border-radius:5px;height:1.6rem;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px 0 0 4px;transition:width .3s}
+.bar-fill.fill-muted{background:var(--muted)}
+.bar-fill.fill-primary{background:var(--primary)}
+.bar-fill.fill-accent{background:var(--r4)}
+.bar-value{font-family:var(--mono);font-weight:600;font-size:.92rem;text-align:right;font-variant-numeric:tabular-nums}
+.axis-note{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:-.4rem}
+
+/* metric pair */
+.metric-pair{display:flex;gap:2.4rem;align-items:baseline;margin:1.2rem 0 1.6rem;flex-wrap:wrap}
+.metric{display:flex;flex-direction:column;gap:.3rem}
+.metric .num{font-family:var(--mono);font-weight:600;font-size:clamp(2.1rem,5vw,3rem);font-variant-numeric:tabular-nums;line-height:1}
+.metric.is-model .num{color:var(--primary)}
+.metric.is-base .num{color:var(--muted)}
+.metric .lbl{font-family:var(--ui);font-size:.85rem;color:var(--ink-2)}
+.metric .gain{font-family:var(--mono);font-size:.85rem;color:var(--ok);background:var(--ok-soft);padding:.2rem .55rem;border-radius:5px;align-self:flex-start}
+
+/* UF dot grid */
+.uf-grid{display:flex;flex-wrap:wrap;gap:5px;margin:1.1rem 0 1rem;max-width:520px}
+.uf-dot{width:18px;height:18px;border-radius:4px}
+.uf-dot.win{background:var(--primary)}
+.uf-dot.lose{background:var(--r4)}
+.uf-dot.abstain{background:var(--surface-2);border:1.5px dashed var(--line)}
+.legend{display:flex;gap:1.4rem;flex-wrap:wrap;font-family:var(--mono);font-size:.78rem;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:.45rem}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+/* panel mode cards */
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.4rem 0}
+@media (max-width:760px){.modes{grid-template-columns:1fr}}
+.mode-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.2rem 1.2rem 1.4rem}
+.mode-card.mode-win{border-top:4px solid var(--primary)}
+.mode-card.mode-simple{border-top:4px solid var(--r3)}
+.mode-card.mode-abstain{border-top:4px dashed var(--line);opacity:.85}
+.mode-card .mode-n{font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.mode-card h4{font-family:var(--ui);font-size:1.02rem;margin:.4rem 0 .5rem}
+.mode-card p{font-family:var(--prose);font-size:.92rem;color:var(--ink-2);margin:0;line-height:1.5}
+.link-line{font-family:var(--mono);font-size:.9rem;color:var(--primary);margin-top:.4rem;word-break:break-all}
+
+/* recommendations */
+.recs{display:flex;flex-direction:column;gap:1rem;margin-top:1.2rem}
+.rec{display:grid;grid-template-columns:2.6rem 1fr;gap:1rem;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.2rem 1.4rem;box-shadow:var(--shadow)}
+.rec .n{font-family:var(--mono);font-weight:600;font-size:1.3rem;color:var(--primary)}
+.rec h4{font-family:var(--ui);font-size:1.05rem;margin:0 0 .4rem}
+.rec p{font-family:var(--prose);font-size:.96rem;color:var(--ink-2);margin:0;line-height:1.55}
+
+/* nav */
+.navbar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:.7rem clamp(1rem,3vw,2rem);display:flex;align-items:center;gap:.9rem;z-index:20}
+.navbar .counter{font-family:var(--mono);font-size:.78rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:.35rem;overflow-x:auto;flex:1;scrollbar-width:thin}
+.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.02em;white-space:nowrap;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);padding:.4rem .7rem;border-radius:20px;cursor:pointer}
+.chip.active{background:var(--primary);border-color:var(--primary);color:var(--surface)}
+.navbtn{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);width:2.2rem;height:2.2rem;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex:none}
+.navbtn:hover{background:var(--primary-soft)}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--primary);z-index:21;transition:width .25s}
+</style>
+
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <section class="slide active">
+    <div class="slide-inner">
+      <p class="kicker">Reunião executiva · Política educacional</p>
+      <h1>Tech Challenge Fase 3</h1>
+      <p class="dek">Predição e Inteligência Analítica para Alfabetização no Brasil</p>
+      <p class="quote">Testamos se dá para prever, aluno por aluno, quem vai precisar de ajuda.
+      <strong>A resposta honesta virou o produto.</strong></p>
+      <p class="cover-mark">Pós-Tech FIAP · Luiz Maibashi · Setembro/2026</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">O problema</p>
+      <h2>Sabemos o município. Falta saber o aluno.</h2>
+      <div class="split">
+        <div class="split-card">
+          <span class="tag">Já resolvido na Fase 2</span>
+          <h3>Qual município está em risco</h3>
+          <p>O Secretário já sabe onde investir: um painel por município, decisão de orçamento, prioridade territorial.</p>
+        </div>
+        <div class="arrow-between">→</div>
+        <div class="split-card is-target">
+          <span class="tag">A pergunta desta fase</span>
+          <h3>Qual aluno precisa de ajuda</h3>
+          <p>O Coordenador Pedagógico já sabe em que escola está. Falta saber qual aluno, dentro dela, precisa de intervenção agora.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">O que testamos</p>
+      <h2>O modelo de aluno perdeu. Medido, com rigor.</h2>
+      <div class="bars">
+        <div class="bar-row"><span class="bar-label">Referência aleatória</span>
+          <div class="bar-track"><div class="bar-fill fill-muted" style="width:19%"></div></div>
+          <span class="bar-value">0,504</span></div>
+        <div class="bar-row"><span class="bar-label">Baseline fraco (taxa municipal)</span>
+          <div class="bar-track"><div class="bar-fill fill-muted" style="width:57%"></div></div>
+          <span class="bar-value">0,582</span></div>
+        <div class="bar-row"><span class="bar-label">Modelo (12 features de aluno)</span>
+          <div class="bar-track"><div class="bar-fill fill-primary" style="width:70%"></div></div>
+          <span class="bar-value">0,605</span></div>
+        <div class="bar-row"><span class="bar-label">Meta do PDE, aplicada direto</span>
+          <div class="bar-track"><div class="bar-fill fill-accent" style="width:100%"></div></div>
+          <span class="bar-value">0,633</span></div>
+      </div>
+      <p class="axis-note">ROC-AUC · eixo iniciado em 0,45 para evidenciar a diferença · diferença modelo−baseline: −0,028, IC95% [−0,034; −0,023], n = 24.505</p>
+      <p class="quote" style="margin-top:1.4rem">Não é falha de algoritmo. É o que o dado disponível permite enxergar:
+      ele descreve o <strong>município</strong>, não o aluno.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">O segundo entregável</p>
+      <h2>Entre municípios, dentro do mesmo estado, o modelo vence</h2>
+      <div class="metric-pair">
+        <div class="metric is-model"><span class="num">0,617</span><span class="lbl">AUC do modelo</span></div>
+        <div class="metric is-base"><span class="num">0,452</span><span class="lbl">AUC do baseline</span></div>
+        <span class="gain">ganho +0,164</span>
+      </div>
+      <p class="body">Backtest prospectivo: treinado em 2023→2024, testado contra o resultado real de 2025, que na época do treino ainda não existia. Veredito por UF, nunca nacional:</p>
+      <div class="uf-grid" id="ufGrid" aria-hidden="true"></div>
+      <div class="legend">
+        <span><i style="background:var(--primary)"></i> 14 UFs: modelo vence</span>
+        <span><i style="background:var(--r4)"></i> 1 UF (CE): regra simples vence</span>
+        <span><i style="background:var(--surface-2);border:1.5px dashed var(--line)"></i> 8 UFs: inconclusivo, só diagnóstico</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">A ferramenta</p>
+      <h2>Isso virou um painel, não uma planilha</h2>
+      <p class="body">O gestor escolhe o estado dele. O painel decide, por UF, o que mostrar. Nunca um ranking nacional comparando réguas de prova diferentes.</p>
+      <div class="modes">
+        <div class="mode-card mode-win"><span class="mode-n">14 UFs</span><h4>Ranking do modelo</h4><p>O modelo venceu com IC95% positivo, e a lista prioriza municípios.</p></div>
+        <div class="mode-card mode-simple"><span class="mode-n">1 UF (CE)</span><h4>Regra simples</h4><p>Aqui a regra trivial ganhou. O painel recomenda ela, não o modelo.</p></div>
+        <div class="mode-card mode-abstain"><span class="mode-n">8 UFs</span><h4>Só diagnóstico</h4><p>IC95% cruza zero. A ferramenta se abstém de sugerir ordem de ação.</p></div>
+      </div>
+      <p class="link-line">luizmaibashi.github.io/tech-challenge-fase3-alfabetizacao</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Valor estratégico</p>
+      <h2>Duas recomendações, as duas com intervalo de confiança</h2>
+      <div class="recs">
+        <div class="rec"><span class="n">1</span><div><h4>Busca ativa de aluno</h4><p>Usar a meta do PDE do município. Mais simples de explicar, mais barata de manter e estatisticamente melhor que qualquer modelo testado.</p></div></div>
+        <div class="rec"><span class="n">2</span><div><h4>Priorização entre municípios</h4><p>Comparar só dentro do mesmo estado, nunca entre estados, e usar o painel, que já sabe onde ajuda e onde não ajuda.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">O que fica</p>
+      <p class="quote" style="font-size:clamp(1.3rem,3vw,1.9rem)">O critério de sucesso foi definido
+      <strong>antes</strong> de qualquer treino. Quando o resultado saiu diferente do esperado,
+      o dado ganhou do modelo.</p>
+      <p class="meta" style="margin-top:2rem">github.com/luizmaibashi/tech-challenge-fase3-alfabetizacao · docs/adr/0001 a 0012</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="navbar">
+  <button class="navbtn" id="prevBtn" aria-label="Slide anterior">←</button>
+  <div class="chips" id="chips"></div>
+  <span class="counter" id="counter">01 / 07</span>
+  <button class="navbtn" id="nextBtn" aria-label="Próximo slide">→</button>
+</div>
+
+<script>
+(function(){
+  var labels = ["Capa","Problema","Resultado","Solução","Painel","Recomendações","Fechamento"];
+  var slides = document.querySelectorAll('.slide');
+  var total = slides.length;
+  var current = 1;
+  var chipsWrap = document.getElementById('chips');
+
+  labels.forEach(function(label, i){
+    var chip = document.createElement('button');
+    chip.className = 'chip' + (i === 0 ? ' active' : '');
+    chip.textContent = label;
+    chip.addEventListener('click', function(){ show(i + 1); });
+    chipsWrap.appendChild(chip);
+  });
+
+  function show(n){
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    current = n;
+    slides.forEach(function(s, i){ s.classList.toggle('active', i === n - 1); });
+    Array.prototype.forEach.call(chipsWrap.children, function(c, i){ c.classList.toggle('active', i === n - 1); });
+    document.getElementById('counter').textContent = String(n).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+    document.getElementById('progress').style.width = (n / total * 100) + '%';
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', function(){ show(current - 1); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ show(current + 1); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight') show(current + 1);
+    if (e.key === 'ArrowLeft') show(current - 1);
+  });
+
+  // UF dot grid: 23 total, 14 win, 1 lose, 8 abstain
+  var grid = document.getElementById('ufGrid');
+  var seq = [];
+  for (var i=0;i<14;i++) seq.push('win');
+  seq.push('lose');
+  for (var j=0;j<8;j++) seq.push('abstain');
+  seq.forEach(function(kind){
+    var d = document.createElement('div');
+    d.className = 'uf-dot ' + kind;
+    grid.appendChild(d);
+  });
+
+  show(1);
+})();
+</script>
