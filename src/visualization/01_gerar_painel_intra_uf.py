@@ -48,6 +48,7 @@ if hasattr(sys.stdout, "reconfigure"):
 BASE = Path(__file__).resolve().parents[2]
 ENTRADA = BASE / "reports" / "ranking_prospectivo_2025.json"
 SAIDA = BASE / "reports" / "painel_intra_uf.html"
+
 # Segunda saida: pagina publicada via GitHub Pages (docs/index.html).
 # Ver docs/spec/deploy-pages.md e, na base, docs/DECISAO_DEPLOY_PORTFOLIO.md.
 SAIDA_SITE = BASE / "docs" / "index.html"
@@ -79,13 +80,21 @@ def main():
           f"abstencao em {r['ufs_abster']}")
 
 
-TEMPLATE = r"""<meta charset="utf-8">
+TEMPLATE = r"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Priorização da Alfabetização</title>
+<title>Priorização da Alfabetização — Tech Challenge Fase 3</title>
+<meta name="description" content="Painel que estima, antes do resultado sair, quais municípios têm mais chance de não atingir a meta de alfabetização — com uso condicional por UF, validado por backtest prospectivo em 2025.">
+<meta property="og:title" content="Priorização da Alfabetização — Tech Challenge Fase 3">
+<meta property="og:description" content="Quais municípios do meu estado não vão atingir a meta? Ranking por UF, testado fora do ciclo de treino, com abstenção onde a evidência é inconclusiva.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+html,body{overflow-x:hidden;max-width:100%}
 :root{
   --bg:#EFF2F1; --surface:#FFFFFF; --surface-2:#F7F9F8;
   --ink:#16211F; --ink-2:#3A4744; --muted:#67746F; --line:#D3DAD7; --line-2:#E4E9E7;
@@ -131,7 +140,7 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:700;letter-spacing:-.02em;li
   background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;
   padding:.95rem 1.2rem;margin:1.4rem 0 1.8rem}
 .warn .ic{font-family:var(--mono);font-weight:600;color:var(--warn);font-size:.95rem;line-height:1.4}
-.warn p{margin:0;font-family:var(--prose);font-size:.94rem;color:var(--ink-2);max-width:74ch}
+.warn p{margin:0;font-family:var(--prose);font-size:.94rem;color:var(--ink-2);max-width:74ch;min-width:0}
 .warn strong{color:var(--ink)}
 
 .picker{margin-bottom:1.2rem}
@@ -240,12 +249,18 @@ footer.note code{font-family:var(--mono);font-size:.9em}
 .method li:last-child{margin-bottom:0}
 .method code{font-family:var(--mono);font-size:.85em}
 
-.provenance{font-family:var(--mono);font-size:.74rem;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;padding:.7rem .9rem;margin-bottom:1.4rem;line-height:1.7;word-break:break-all}
+.provenance{font-family:var(--mono);font-size:.74rem;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;padding:.7rem .9rem;margin-bottom:1.4rem;line-height:1.7;overflow-wrap:anywhere;word-break:break-word}
 .provenance b{color:var(--ink-2)}
+footer.note code,.method code{overflow-wrap:anywhere;word-break:break-word}
+.back-link{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--mono);font-size:.76rem;color:var(--muted);text-decoration:none;margin-bottom:.9rem}
+.back-link:hover{color:var(--primary)}
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header class="top">
+    <a class="back-link" href="https://github.com/luizmaibashi/tech-challenge-fase3-alfabetizacao">&larr; projeto completo (README + 12 ADRs): este painel é o Entregável 2 — o Entregável 1 é um modelo que perdeu do baseline, de propósito</a>
     <div class="kicker" id="kicker">Compromisso Nacional Criança Alfabetizada</div>
     <h1>Quais municípios do meu estado não vão atingir a meta?</h1>
     <p class="sub">Risco previsto de o município ficar abaixo da meta do PDE no próximo ciclo, ordenado dentro de cada estado — com uso condicional por UF, definido por um teste fora do ciclo de treino.</p>
@@ -457,6 +472,8 @@ montarChips();
 montarResumoMetodologia();
 render();
 </script>
+</body>
+</html>
 """
 
 
