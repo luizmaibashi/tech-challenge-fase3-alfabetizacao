@@ -94,7 +94,6 @@ TEMPLATE = r"""<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-html,body{overflow-x:hidden;max-width:100%}
 :root{
   --bg:#EFF2F1; --surface:#FFFFFF; --surface-2:#F7F9F8;
   --ink:#16211F; --ink-2:#3A4744; --muted:#67746F; --line:#D3DAD7; --line-2:#E4E9E7;
@@ -140,7 +139,7 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:700;letter-spacing:-.02em;li
   background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;
   padding:.95rem 1.2rem;margin:1.4rem 0 1.8rem}
 .warn .ic{font-family:var(--mono);font-weight:600;color:var(--warn);font-size:.95rem;line-height:1.4}
-.warn p{margin:0;font-family:var(--prose);font-size:.94rem;color:var(--ink-2);max-width:74ch;min-width:0}
+.warn p{margin:0;font-family:var(--prose);font-size:.94rem;color:var(--ink-2);max-width:74ch}
 .warn strong{color:var(--ink)}
 
 .picker{margin-bottom:1.2rem}
