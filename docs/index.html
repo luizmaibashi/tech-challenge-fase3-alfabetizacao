@@ -63,25 +63,25 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:700;letter-spacing:-.02em;li
 .picker{margin-bottom:1.2rem}
 .picker-label{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem}
 .chips{display:flex;flex-wrap:wrap;gap:.4rem}
-.chip{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:.42rem .7rem;
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:.62rem .7rem;min-height:44px;
   cursor:pointer;font-size:.86rem;font-weight:500;transition:background .12s,border-color .12s;font-family:var(--mono);
   display:flex;align-items:center;gap:.4rem}
 .chip:hover{border-color:var(--primary)}
 .chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:var(--surface)}
-.chip .mk{width:6px;height:6px;border-radius:50%;flex:none}
-.chip .mk.ranking_modelo{background:var(--ok)}
-.chip .mk.regra_simples{background:var(--warn)}
-.chip .mk.abster{background:var(--muted)}
-.chip[aria-pressed="true"] .mk{outline:1px solid var(--surface)}
+.chip .mk{font-size:.85rem;line-height:1;flex:none}
+.chip .mk.ranking_modelo{color:var(--ok)}
+.chip .mk.regra_simples{color:var(--warn)}
+.chip .mk.abster{color:var(--muted)}
+.chip[aria-pressed="true"] .mk{color:inherit}
 :root[data-theme="dark"] .chip[aria-pressed="true"],
 :root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#0F1614}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .chip[aria-pressed="true"]{color:#fff}}
 
 .legend-uf{display:flex;flex-wrap:wrap;gap:.3rem 1.1rem;font-size:.76rem;color:var(--muted);margin-top:.55rem;font-family:var(--mono)}
-.legend-uf i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:.35rem}
-.legend-uf i.ranking_modelo{background:var(--ok)}
-.legend-uf i.regra_simples{background:var(--warn)}
-.legend-uf i.abster{background:var(--muted)}
+.legend-uf i{font-style:normal;margin-right:.35rem}
+.legend-uf i.ranking_modelo{color:var(--ok)}
+.legend-uf i.regra_simples{color:var(--warn)}
+.legend-uf i.abster{color:var(--muted)}
 
 .state-head{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:flex-end;margin:1.6rem 0 .9rem}
 .state-name{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin:0}
@@ -123,10 +123,19 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:700;letter-spacing:-.02em;li
 .search::placeholder{color:var(--muted)}
 .count{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
 
+.cross-hint{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:.65rem .9rem;margin-bottom:.8rem;font-size:.86rem;color:var(--ink-2);line-height:1.6}
+.cross-hint button{background:none;border:none;padding:0;margin:0 .1rem;color:var(--primary);font-family:var(--mono);font-size:.86rem;font-weight:600;cursor:pointer;text-decoration:underline}
+
+.scroll-hint{display:none;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:0 0 .5rem}
+@media (max-width:700px){.scroll-hint{display:block}}
+
 .tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
 table{border-collapse:collapse;width:100%;min-width:660px;font-size:.88rem}
 thead th{position:sticky;top:0;background:var(--surface-2);font-family:var(--mono);font-size:.66rem;letter-spacing:.07em;
   text-transform:uppercase;color:var(--muted);font-weight:500;text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--line);white-space:nowrap}
+thead th.sortable{cursor:pointer;user-select:none}
+thead th.sortable:hover{color:var(--ink-2)}
+.sort-ic{display:inline-block;min-width:.9em;font-family:var(--mono)}
 tbody td{padding:.52rem .8rem;border-bottom:1px solid var(--line-2);vertical-align:middle;white-space:nowrap}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--surface-2)}
@@ -204,9 +213,9 @@ footer.note code,.method code{overflow-wrap:anywhere;word-break:break-word}
     <div class="picker-label">Selecione o estado</div>
     <div class="chips" id="chips"></div>
     <div class="legend-uf">
-      <span><i class="ranking_modelo"></i>ranking do modelo (venceu o backtest)</span>
-      <span><i class="regra_simples"></i>regra simples (modelo perdeu)</span>
-      <span><i class="abster"></i>abstenção (inconclusivo)</span>
+      <span><i class="ranking_modelo" aria-hidden="true">✓</i>ranking do modelo (venceu o backtest)</span>
+      <span><i class="regra_simples" aria-hidden="true">⚠</i>regra simples (modelo perdeu)</span>
+      <span><i class="abster" aria-hidden="true">≈</i>abstenção (inconclusivo)</span>
     </div>
   </div>
 
@@ -234,15 +243,19 @@ footer.note code,.method code{overflow-wrap:anywhere;word-break:break-word}
     <input class="search" id="search" type="search" placeholder="Buscar município…" aria-label="Buscar município">
     <span class="count" id="count"></span>
   </div>
+  <div id="crossHint"></div>
+  <p class="scroll-hint">Deslize a tabela para o lado para ver Taxa 2024, Meta e Taxa 2025 &rarr;</p>
 
   <div class="tbl-wrap">
     <table>
       <thead><tr>
-        <th>#</th><th>Município</th><th id="thOrd">Risco previsto</th>
-        <th style="text-align:right">Taxa 2024</th>
-        <th style="text-align:right">Meta 2025</th>
-        <th style="text-align:right">Taxa 2025</th>
-        <th>Resultado real</th>
+        <th>#</th>
+        <th class="sortable" data-idx="1">Município<span class="sort-ic"></span></th>
+        <th id="thOrd" class="sortable" data-idx="2"><span class="lbl">Risco previsto</span><span class="sort-ic"></span></th>
+        <th class="sortable" data-idx="6">Resultado real<span class="sort-ic"></span></th>
+        <th class="sortable" data-idx="3" style="text-align:right">Taxa 2024<span class="sort-ic"></span></th>
+        <th class="sortable" data-idx="4" style="text-align:right">Meta 2025<span class="sort-ic"></span></th>
+        <th class="sortable" data-idx="5" style="text-align:right">Taxa 2025<span class="sort-ic"></span></th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
@@ -260,6 +273,15 @@ const DATA = {"ufs":{"AL":{"nome":"Alagoas","n":102,"uso":"abster","veredito":"i
 const ufs = Object.keys(DATA.ufs).sort();
 let atual = ufs.includes("MG") ? "MG" : ufs[0];
 let filtro = "";
+let sortCol = null;
+let sortDir = 1;
+
+const GLYPH = {ranking_modelo:"✓", regra_simples:"⚠", abster:"≈"};
+const USO_LABEL = {
+  ranking_modelo: "ranking do modelo, venceu o backtest",
+  regra_simples: "regra simples, modelo perdeu",
+  abster: "abstenção, inconclusivo"
+};
 
 const el = id => document.getElementById(id);
 const pct = v => (v*100).toFixed(1).replace(".", ",") + "%";
@@ -287,9 +309,46 @@ function montarProvenance(){
 
 function montarChips(){
   el("chips").innerHTML = ufs.map(uf =>
-    `<button class="chip" data-uf="${uf}" aria-pressed="${uf===atual}"><span class="mk ${DATA.ufs[uf].uso}"></span>${uf}</button>`).join("");
+    `<button class="chip" data-uf="${uf}" aria-pressed="${uf===atual}" aria-label="${uf}, ${USO_LABEL[DATA.ufs[uf].uso]}">` +
+    `<span class="mk ${DATA.ufs[uf].uso}" aria-hidden="true">${GLYPH[DATA.ufs[uf].uso]}</span>${uf}</button>`).join("");
   el("chips").querySelectorAll(".chip").forEach(b =>
-    b.addEventListener("click", () => { atual = b.dataset.uf; filtro=""; el("search").value=""; render(); }));
+    b.addEventListener("click", () => {
+      atual = b.dataset.uf; filtro=""; el("search").value=""; sortCol=null; sortDir=1; render();
+    }));
+}
+
+function montarSortHandlers(){
+  document.querySelectorAll("th.sortable").forEach(th => {
+    th.addEventListener("click", () => {
+      const idx = Number(th.dataset.idx);
+      if (sortCol === idx) sortDir *= -1; else { sortCol = idx; sortDir = 1; }
+      render();
+    });
+  });
+}
+
+function ordenar(linhas){
+  if (sortCol === null) return linhas;
+  const idx = sortCol;
+  return [...linhas].sort((a, b) => {
+    const x = a[idx], y = b[idx];
+    if (typeof x === "string") return sortDir * x.localeCompare(y, "pt-BR");
+    return sortDir * ((x ?? -1) - (y ?? -1));
+  });
+}
+
+function atualizarIndicadoresSort(){
+  document.querySelectorAll("th.sortable").forEach(th => {
+    const idx = Number(th.dataset.idx);
+    const ic = th.querySelector(".sort-ic");
+    if (idx === sortCol) {
+      th.setAttribute("aria-sort", sortDir === 1 ? "ascending" : "descending");
+      ic.textContent = sortDir === 1 ? " ▲" : " ▼";
+    } else {
+      th.setAttribute("aria-sort", "none");
+      ic.textContent = "";
+    }
+  });
 }
 
 function montarResumoMetodologia(){
@@ -344,7 +403,7 @@ function render(){
   const rotuloOrd = d.uso === "regra_simples"
     ? "ordenado pela regra simples"
     : d.uso === "abster" ? "score do modelo (diagnóstico)" : "ranking do modelo";
-  el("thOrd").textContent = d.uso === "regra_simples" ? "Score do modelo (ref.)" : "Risco previsto";
+  el("thOrd").querySelector(".lbl").textContent = d.uso === "regra_simples" ? "Score do modelo (ref.)" : "Risco previsto";
 
   el("stats").innerHTML = `
     <div class="stat"><div class="k">Municípios</div><div class="v">${d.n}</div></div>
@@ -359,10 +418,14 @@ function render(){
   el("trust").innerHTML = renderTrust(d);
 
   const termo = filtro.trim().toLowerCase();
-  const linhas = d.m.filter(r => !termo || r[1].toLowerCase().includes(termo));
+  let linhas = d.m.filter(r => !termo || r[1].toLowerCase().includes(termo));
+  linhas = ordenar(linhas);
+
   el("count").textContent = termo
     ? `${linhas.length} de ${d.m.length} municípios`
     : `${d.m.length} municípios — ${rotuloOrd}`;
+
+  montarCrossHint(termo, linhas.length);
 
   el("rows").innerHTML = linhas.map(r => {
     const [rank, nome, score, t24, meta, t25, real] = r;
@@ -373,20 +436,47 @@ function render(){
         <span class="riskbar"><span class="riskfill" style="width:${(score*100).toFixed(0)}%;background:${corRisco(score)}"></span></span>
         <span class="riskval">${score.toFixed(2).replace(".",",")}</span>
       </div></td>
-      <td class="num">${num(t24)}</td>
-      <td class="num">${num(meta)}</td>
-      <td class="num">${num(t25)}</td>
       <td>${real === 1
         ? '<span class="badge miss">abaixo da meta</span>'
         : '<span class="badge hit">atingiu</span>'}</td>
+      <td class="num">${num(t24)}</td>
+      <td class="num">${num(meta)}</td>
+      <td class="num">${num(t25)}</td>
     </tr>`;
   }).join("");
+
+  atualizarIndicadoresSort();
+}
+
+function montarCrossHint(termo, encontradosNaUf){
+  if (!termo || encontradosNaUf > 0) { el("crossHint").innerHTML = ""; return; }
+
+  const achados = [];
+  for (const uf of ufs) {
+    if (uf === atual) continue;
+    for (const r of DATA.ufs[uf].m) {
+      if (r[1].toLowerCase().includes(termo)) achados.push({ uf, nome: r[1] });
+    }
+  }
+
+  if (!achados.length) {
+    el("crossHint").innerHTML = `<div class="cross-hint">Nenhum município encontrado em nenhum estado para "${filtro.trim()}".</div>`;
+    return;
+  }
+
+  el("crossHint").innerHTML = `<div class="cross-hint">Não encontrado em ${DATA.ufs[atual].nome}. Encontrado em outro estado: ` +
+    achados.slice(0, 8).map(a => `<button type="button" data-uf="${a.uf}" data-nome="${a.nome}">${a.nome} (${a.uf})</button>`).join(", ") +
+    (achados.length > 8 ? "…" : "") + `</div>`;
+  el("crossHint").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    atual = b.dataset.uf; filtro = b.dataset.nome; el("search").value = filtro; sortCol=null; sortDir=1; render();
+  }));
 }
 
 el("search").addEventListener("input", e => { filtro = e.target.value; render(); });
 montarProvenance();
 montarChips();
 montarResumoMetodologia();
+montarSortHandlers();
 render();
 </script>
 </body>
