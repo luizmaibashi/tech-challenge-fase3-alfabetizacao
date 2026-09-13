@@ -230,7 +230,7 @@ Cada módulo vai seguir este fluxo:
 
 ### Leitura (30-60 min)
 
-Abra `TRILHA_APRENDIZADO_FASE3.md` e leia:
+Abra `raw/pos_tech/TRILHA_APRENDIZADO_FASE3.md` (na raiz da base) e leia:
 1. Seção "VISAO GERAL"
 2. Seção "Trade-offs Fundamentais"
 3. Modulo 01 (Aula 2: Classificação vs Regressão)
