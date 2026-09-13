@@ -160,7 +160,7 @@ Próximas Iterações:
 ```
 
 **Recursos:**
-- `TRILHA_APRENDIZADO_FASE3.md` (modelos, trade-offs)
+- `raw/pos_tech/TRILHA_APRENDIZADO_FASE3.md` (na raiz da base) (modelos, trade-offs)
 - `docs/PLANO_SABATINAS_PROGRESSIVAS.md` (sabatinas por modelo)
 - Seu próprio código em `src/modeling/` (executar, comparar)
 

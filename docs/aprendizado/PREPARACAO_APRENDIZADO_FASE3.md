@@ -38,7 +38,7 @@
 
 ## Estrutura de Aprendizado (Esperando Trilha)
 
-Quando `TRILHA_APRENDIZADO_FASE3.md` chegar, a gente vai:
+Quando `raw/pos_tech/TRILHA_APRENDIZADO_FASE3.md` (na raiz da base) chegar, a gente vai:
 
 ### Fase 1: Estudo + Sabatinas Progressivas
 1. **Módulo 1 (O quê, Como, Por quê)**
@@ -93,7 +93,7 @@ Quando `TRILHA_APRENDIZADO_FASE3.md` chegar, a gente vai:
 
 ## Próximo Passo
 
-⏳ **Aguardando:** `TRILHA_APRENDIZADO_FASE3.md` (agente compilando 27 PDFs)
+⏳ **Aguardando:** `raw/pos_tech/TRILHA_APRENDIZADO_FASE3.md` (na raiz da base) (agente compilando 27 PDFs)
 
 Quando chegar:
 1. Você lê o módulo 1 (fundamentals)
