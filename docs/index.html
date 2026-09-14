@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Priorização da Alfabetização — Tech Challenge Fase 3</title>
-<meta name="description" content="Painel que estima, antes do resultado sair, quais municípios têm mais chance de não atingir a meta de alfabetização — com uso condicional por UF, validado por backtest prospectivo em 2025.">
-<meta property="og:title" content="Priorização da Alfabetização — Tech Challenge Fase 3">
+<title>Priorização da Alfabetização: Tech Challenge Fase 3</title>
+<meta name="description" content="Painel que estima, antes do resultado sair, quais municípios têm mais chance de não atingir a meta de alfabetização, com uso condicional por UF, validado por backtest prospectivo em 2025.">
+<meta property="og:title" content="Priorização da Alfabetização: Tech Challenge Fase 3">
 <meta property="og:description" content="Quais municípios do meu estado não vão atingir a meta? Ranking por UF, testado fora do ciclo de treino, com abstenção onde a evidência é inconclusiva.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -186,27 +186,27 @@ footer.note code,.method code{overflow-wrap:anywhere;word-break:break-word}
 
 <div class="wrap">
   <header class="top">
-    <a class="back-link" href="https://github.com/luizmaibashi/tech-challenge-fase3-alfabetizacao">&larr; projeto completo (README + 12 ADRs): este painel é o Entregável 2 — o Entregável 1 é um modelo que perdeu do baseline, de propósito</a>
+    <a class="back-link" href="https://github.com/luizmaibashi/tech-challenge-fase3-alfabetizacao">&larr; projeto completo (README + 12 ADRs): este painel é o Entregável 2, o Entregável 1 é um modelo que perdeu do baseline, de propósito</a>
     <div class="kicker" id="kicker">Compromisso Nacional Criança Alfabetizada</div>
     <h1>Quais municípios do meu estado não vão atingir a meta?</h1>
-    <p class="sub">Risco previsto de o município ficar abaixo da meta do PDE no próximo ciclo, ordenado dentro de cada estado — com uso condicional por UF, definido por um teste fora do ciclo de treino.</p>
+    <p class="sub">Risco previsto de o município ficar abaixo da meta do PDE no próximo ciclo, ordenado dentro de cada estado, com uso condicional por UF, definido por um teste fora do ciclo de treino.</p>
   </header>
 
-  <p class="lead">Este painel estima, <strong>antes do resultado sair</strong>, quais municípios têm mais chance de não bater a meta de alfabetização — para ajudar a decidir onde priorizar apoio primeiro. O modelo foi <strong>congelado com dados até 2024 e testado no ciclo de 2025</strong> sem ver o resultado de 2025. Onde ele provou vencer uma regra simples, o painel mostra o ranking do modelo. Onde perdeu, mostra a regra simples. Onde o teste foi inconclusivo, <strong>o painel se abstém</strong> — mostra só o diagnóstico.</p>
+  <p class="lead">Este painel estima, <strong>antes do resultado sair</strong>, quais municípios têm mais chance de não bater a meta de alfabetização, para ajudar a decidir onde priorizar apoio primeiro. O modelo foi <strong>congelado com dados até 2024 e testado no ciclo de 2025</strong> sem ver o resultado de 2025. Onde ele provou vencer uma regra simples, o painel mostra o ranking do modelo. Onde perdeu, mostra a regra simples. Onde o teste foi inconclusivo, <strong>o painel se abstém</strong>: mostra só o diagnóstico.</p>
 
   <div class="provenance" id="provenance"></div>
 
   <div class="gterms">
-    <details><summary>Risco previsto</summary><p>Probabilidade estimada (0 a 1) de o município ficar abaixo da meta no próximo ciclo, calculada só com dado do ciclo anterior — sem espiar o resultado real.</p></details>
+    <details><summary>Risco previsto</summary><p>Probabilidade estimada (0 a 1) de o município ficar abaixo da meta no próximo ciclo, calculada só com dado do ciclo anterior, sem espiar o resultado real.</p></details>
     <details><summary>Meta do PDE</summary><p>Meta de alfabetização de cada município, definida pelo Plano de Metas do Compromisso Nacional Criança Alfabetizada. Ela sobe a cada ano, então comparar direto com a taxa do ano anterior engana.</p></details>
     <details><summary>Regra simples</summary><p>Ordenar os municípios só pela taxa do ano anterior, numa direção fixa. Em alguns estados "quem estava melhor falha mais" (regressão à média); em outros é o contrário (a meta satura e protege quem já está no topo). O modelo só se justifica se superar essa regra.</p></details>
     <details><summary>Backtest prospectivo</summary><p>Testar o modelo num ciclo que ele nunca viu: treina com 2023→2024, prevê 2024→2025 e só então compara com o que de fato aconteceu em 2025. É a evidência mais forte de que a previsão funciona fora do laboratório.</p></details>
-    <details><summary>IC95%</summary><p>Faixa onde o ganho verdadeiro sobre a regra simples provavelmente está, por bootstrap pareado. Se a faixa cruza o zero, não dá para afirmar que o modelo é melhor — é o caso das 8 UFs em que o painel se abstém.</p></details>
+    <details><summary>IC95%</summary><p>Faixa onde o ganho verdadeiro sobre a regra simples provavelmente está, por bootstrap pareado. Se a faixa cruza o zero, não dá para afirmar que o modelo é melhor: é o caso das 8 UFs em que o painel se abstém.</p></details>
   </div>
 
   <div class="warn">
     <span class="ic">!</span>
-    <p><strong>Este painel não permite comparação entre estados — de propósito.</strong> As avaliações são aplicadas pelos próprios estados, e a variação estadual entre anos chega a 20 pontos percentuais. Ordenar municípios de UFs diferentes na mesma escala compara réguas de prova distintas, não desempenho educacional. Também <strong>não serve para decisão sobre um aluno</strong>: é priorização municipal para orientar busca ativa e alocação de apoio, nunca para negar direito ou rotular uma criança.</p>
+    <p><strong>Este painel não permite comparação entre estados, de propósito.</strong> As avaliações são aplicadas pelos próprios estados, e a variação estadual entre anos chega a 20 pontos percentuais. Ordenar municípios de UFs diferentes na mesma escala compara réguas de prova distintas, não desempenho educacional. Também <strong>não serve para decisão sobre um aluno</strong>: é priorização municipal para orientar busca ativa e alocação de apoio, nunca para negar direito ou rotular uma criança.</p>
   </div>
 
   <div class="picker">
@@ -229,9 +229,9 @@ footer.note code,.method code{overflow-wrap:anywhere;word-break:break-word}
   <details class="method">
     <summary>Como este modelo foi construído e testado <span class="mchev">&#9662;</span></summary>
     <ol>
-      <li><strong>Dado:</strong> taxa de alfabetização por município (2023, 2024 e 2025), meta do PDE por município e porte populacional — planilha oficial de resultados e metas do Inep, publicada em <span id="mData">01/04/2026</span>.</li>
-      <li><strong>Um modelo por estado, não um modelo nacional.</strong> Um modelo único para o Brasil, testado fora da amostra (Leave-One-UF-Out), caiu para AUC 0,48 — pior que sortear. Cada estado aplica sua própria prova e sua própria meta.</li>
-      <li><strong>Backtest prospectivo:</strong> o modelo foi congelado na transição 2023→2024 — mesmos hiperparâmetros, sem retuning — e usado para prever o ciclo de 2025. O alvo de 2025 nunca entrou no treino. A comparação é contra a regra simples cuja direção já funcionava naquele estado em 2024.</li>
+      <li><strong>Dado:</strong> taxa de alfabetização por município (2023, 2024 e 2025), meta do PDE por município e porte populacional, planilha oficial de resultados e metas do Inep, publicada em <span id="mData">01/04/2026</span>.</li>
+      <li><strong>Um modelo por estado, não um modelo nacional.</strong> Um modelo único para o Brasil, testado fora da amostra (Leave-One-UF-Out), caiu para AUC 0,48, pior que sortear. Cada estado aplica sua própria prova e sua própria meta.</li>
+      <li><strong>Backtest prospectivo:</strong> o modelo foi congelado na transição 2023→2024 (mesmos hiperparâmetros, sem retuning) e usado para prever o ciclo de 2025. O alvo de 2025 nunca entrou no treino. A comparação é contra a regra simples cuja direção já funcionava naquele estado em 2024.</li>
       <li><strong>Veredito por UF, com IC95% bootstrap pareado (1.000 reamostragens):</strong> em <span id="mVence">14</span> estados o ganho do modelo sobre a regra simples tem intervalo inteiramente positivo → o painel usa o ranking do modelo. No <span id="mPerde">Ceará</span> o intervalo é inteiramente negativo → o painel usa a regra simples. Em <span id="mAbster">8</span> estados o intervalo cruza zero → o painel se abstém, mostrando só o diagnóstico.</li>
       <li><strong>Abstenção é uma resposta, não uma falha.</strong> Onde não há evidência de que o modelo supere a regra simples, recomendar qualquer um dos dois seria vender certeza inexistente. O painel mostra os números e não sugere ordem de ação.</li>
       <li><strong>Reavaliação anual.</strong> A cada publicação de um novo ciclo pelo Inep, o mesmo backtest roda de novo antes de mudar a regra de qualquer UF.</li>
@@ -262,7 +262,7 @@ footer.note code,.method code{overflow-wrap:anywhere;word-break:break-word}
   </div>
 
   <footer class="note">
-    <p><strong>Como ler a tabela.</strong> “Taxa 2024” e “Meta 2025” são o que já se sabia antes do resultado de 2025 — é o que o modelo usa para prever. “Taxa 2025” e “Resultado real” são o que de fato aconteceu, mostrados só para conferência do backtest.</p>
+    <p><strong>Como ler a tabela.</strong> “Taxa 2024” e “Meta 2025” são o que já se sabia antes do resultado de 2025: é o que o modelo usa para prever. “Taxa 2025” e “Resultado real” são o que de fato aconteceu, mostrados só para conferência do backtest.</p>
     <p id="footProv"></p>
     <p>Gerado por <code>src/visualization/01_gerar_painel_intra_uf.py</code> a partir de <code>reports/ranking_prospectivo_2025.json</code> (saída de <code>src/evaluation/05_backtest_prospectivo_2025.py</code>).</p>
   </footer>
@@ -298,7 +298,7 @@ function corRisco(s){
 function montarProvenance(){
   const f = DATA.fonte;
   el("provenance").innerHTML =
-    `<b>Fonte:</b> Inep — Indicador Criança Alfabetizada, planilha municipal de resultados e metas.<br>` +
+    `<b>Fonte:</b> Inep, Indicador Criança Alfabetizada, planilha municipal de resultados e metas.<br>` +
     `<b>Arquivo:</b> ${f.arquivo}<br>` +
     `<b>SHA-256:</b> ${f.sha256}<br>` +
     `<b>Publicação Inep:</b> ${DATA.data_publicacao_inep} &nbsp;·&nbsp; <b>Ciclo avaliado:</b> ${DATA.ciclo} &nbsp;·&nbsp; <b>Data de corte do treino:</b> 2024`;
@@ -360,7 +360,7 @@ function montarResumoMetodologia(){
 function renderTrust(d){
   const clamp = v => Math.max(1, Math.min(99, v * 100));
   const avisoAmostra = d.amostra_pequena
-    ? `<p class="auc-small">Amostra pequena (${d.n} municípios) — intervalo de confiança mais largo. Trate como referência mais fraca do que nos estados maiores.</p>`
+    ? `<p class="auc-small">Amostra pequena (${d.n} municípios). Intervalo de confiança mais largo. Trate como referência mais fraca do que nos estados maiores.</p>`
     : "";
   const regraTxt = d.direcao === "melhor_primeiro"
     ? "priorizar quem tinha a <b>maior</b> taxa em 2024"
@@ -370,7 +370,7 @@ function renderTrust(d){
   const txt = {
     ranking_modelo: "✓ No backtest de 2025, o modelo <b>superou</b> a regra simples neste estado, com o intervalo de confiança inteiramente positivo (ganho <b>" + (d.ganho>=0?"+":"") + n3(d.ganho) + "</b>, IC95% " + n3(d.ganho_ic[0]) + " a " + n3(d.ganho_ic[1]) + "). <b>Use o ranking abaixo.</b>",
     regra_simples: "⚠ No backtest de 2025, o modelo <b>ficou atrás</b> da regra simples neste estado, com o intervalo inteiramente negativo (ganho <b>" + n3(d.ganho) + "</b>, IC95% " + n3(d.ganho_ic[0]) + " a " + n3(d.ganho_ic[1]) + "). A tabela abaixo está ordenada pela <b>regra simples</b> (" + regraTxt + "); o score do modelo é mostrado só para referência.",
-    abster: "≈ No backtest de 2025, a diferença entre modelo e regra simples <b>não é estatisticamente distinguível</b> neste estado (ganho <b>" + (d.ganho>=0?"+":"") + n3(d.ganho) + "</b>, IC95% " + n3(d.ganho_ic[0]) + " a " + n3(d.ganho_ic[1]) + ", cruzando zero). <b>O painel não recomenda ordem de ação aqui</b> — a tabela é só diagnóstico. Olhe a lista inteira e complemente com conhecimento local."
+    abster: "≈ No backtest de 2025, a diferença entre modelo e regra simples <b>não é estatisticamente distinguível</b> neste estado (ganho <b>" + (d.ganho>=0?"+":"") + n3(d.ganho) + "</b>, IC95% " + n3(d.ganho_ic[0]) + " a " + n3(d.ganho_ic[1]) + ", cruzando zero). <b>O painel não recomenda ordem de ação aqui</b>: a tabela é só diagnóstico. Olhe a lista inteira e complemente com conhecimento local."
   }[d.uso];
 
   return `
@@ -384,8 +384,8 @@ function renderTrust(d){
         <span class="auc-mark modelo" style="left:${clamp(d.auc_modelo)}%"></span>
       </div>
       <div class="auc-legend">
-        <span><i class="dot intuicao"></i>regra simples — <b>${n3(d.auc_baseline)}</b></span>
-        <span><i class="dot modelo"></i>modelo — <b>${n3(d.auc_modelo)}</b></span>
+        <span><i class="dot intuicao"></i>regra simples: <b>${n3(d.auc_baseline)}</b></span>
+        <span><i class="dot modelo"></i>modelo: <b>${n3(d.auc_modelo)}</b></span>
         <span>diferença <b>${d.ganho >= 0 ? "+" : ""}${n3(d.ganho)}</b> <span class="ic">IC95% ${n3(d.ganho_ic[0])} a ${n3(d.ganho_ic[1])}</span></span>
       </div>
       ${avisoAmostra}
@@ -423,7 +423,7 @@ function render(){
 
   el("count").textContent = termo
     ? `${linhas.length} de ${d.m.length} municípios`
-    : `${d.m.length} municípios — ${rotuloOrd}`;
+    : `${d.m.length} municípios, ${rotuloOrd}`;
 
   montarCrossHint(termo, linhas.length);
 
