@@ -6,7 +6,7 @@
 > não supera o melhor baseline municipal**, e a investigação de por quê
 > levou a um segundo entregável que funciona.
 
-**Vídeo executivo:** [A preencher, link após gravação]
+
 **Painel ao vivo:** <https://luizmaibashi.github.io/tech-challenge-fase3-alfabetizacao/>
 
 ## O que este projeto entrega
