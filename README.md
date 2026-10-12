@@ -14,7 +14,7 @@
 |---|---|---|
 | 1 | **Modelo supervisionado aluno-nível** (exigência do enunciado) | Executado com rigor e **reprovado no próprio critério de falsificação**: 0,6047 contra 0,6331 da meta do PDE aplicada uniformemente, IC95% [−0,0342, −0,0228]. Resultado negativo, medido e documentado |
 | 2 | **A inversão de direção entre estados** | "Quem estava melhor em 2023 falha mais a meta" vale em **16 UFs**; o **oposto** vale em 7. Dois mecanismos medidos: regressão à média onde a meta acompanha o município (MG), e teto de 80,0 que blinda os melhores onde a meta satura (CE). Responde a pergunta de negócio nº 4 do enunciado ("como prever municípios que podem não atingir metas futuras?"), a única sem resposta **desenvolvida nesta fase** |
-| 3 | **Modelo de priorização municipal intra-UF** | Validado prospectivamente no ciclo 2025 sobre **5.285 municípios de 23 UFs**: AUC ponderada **0,6167** contra **0,4523** do baseline cuja direção já era conhecida em 2024, ganho de **+0,1644**. A decisão é condicional, não nacional: o modelo vence em 14 UFs, o baseline vence no CE e 8 UFs exigem abstenção. O ranking só é acionável onde o IC bootstrap pareado sustenta essa afirmação |
+| 3 | **Modelo de priorização municipal intra-UF** | Dois testes, com baselines diferentes. **Retrospectivo (2024)**, contra a regra simples com a direção prevista pelas outras UFs: AUC ponderada **0,6478** contra **0,6209**, ganho **+0,027**, IC95% [+0,007, +0,048] (§8). **Prospectivo (modelo congelado em 2023→2024, avaliado no ciclo 2025)**, sobre **5.285 municípios de 23 UFs**: AUC ponderada **0,6167** contra **0,4523** da regra simples com a direção observada em 2024, ganho de **+0,1644**. O baseline prospectivo fica abaixo de 0,5 porque a direção de 2024 falhou em 2025 em 16 das 23 UFs; o ganho grande mede sobretudo proteção contra essa virada, não um ranqueador muito melhor. A decisão é condicional, não nacional: no backtest de 2025 o modelo vence em 14 UFs, o baseline vence no CE e 8 UFs exigem abstenção. O ranking só é acionável onde o IC bootstrap pareado sustenta essa afirmação |
 | 4 | **Advertência de validade sobre comparação entre estados** | Ranking nacional de municípios compara réguas de avaliação distintas, inclusive nos marts da nossa Fase 2 |
 | 5 | **Painel de priorização** (`reports/painel_intra_uf.html`) | Regenerado com o contrato operacional de 2025: ranking do modelo nas 14 UFs vencedoras, regra simples no CE, abstenção (só diagnóstico) nas 8 UFs inconclusivas. Particionado por UF, sem eixo nacional. Fonte oficial, SHA-256 da planilha e data de corte no rodapé. Gerado de `reports/ranking_prospectivo_2025.json` |
 
@@ -600,6 +600,13 @@ exatamente por isso.
 fora (+0,155, IC95% [+0,082, +0,226]). Nas 16 previsíveis, empate técnico
 (−0,010, IC cruza zero). O modelo é um **seguro contra errar a direção**, não
 um ranqueador superior.
+
+**Este é o teste retrospectivo.** O backtest prospectivo de 2025
+(`reports/backtest_prospectivo_2025.json`) usa outro baseline, a direção
+observada em 2024, e por isso dá números diferentes: 0,6167 contra 0,4523,
+com vitória em 14 UFs. A direção de 2024 falhou em 2025 em 16 das 23 UFs, o
+que confirma no tempo o mesmo achado: o valor do modelo está em não depender
+de acertar a direção.
 
 ### O enriquecimento com infraestrutura escolar, e o efeito ecológico
 
